@@ -1,0 +1,13 @@
+{
+  "name": "triviakit",
+  "private": "true",
+  "version": "1.0.0",
+  "author": "Chap Callanan",
+  "workspaces": [
+    "./common",
+    "./server",
+    "./buzzer",
+    "./screen"
+  ],
+  "scripts": {}
+}
