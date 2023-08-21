@@ -106,7 +106,11 @@ if (existsSync(webPath)) {
 }
 
 const server = app.listen(port, () => {
-  console.log(`⚡️ Server is online! I think I'm at http://${localIP}:${port}`);
+  const serverUrl = `http://${localIP}:${port}`;
+  console.log(`⚡️ Server is online! 
+  📺 Screen at ${serverUrl}/screen
+  🔴 Buzzers at ${serverUrl}/buzzer
+  🎤 Host interface at ${serverUrl}/host-controller`);
 });
 
 const sockets: Map<number, WebSocket> = new Map();
