@@ -1,0 +1,10 @@
+.root {
+    height: 100%;
+    position: relative;
+}
+
+.li {
+    position: absolute;
+    transition: transform 500ms ease;
+    width: 100%;
+}

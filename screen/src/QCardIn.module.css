@@ -1,0 +1,20 @@
+.enter {
+    transform: translateY(120%);
+}
+.enterActive {
+    transform: translateY(0%);
+    transition: transform 750ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+.enterDone {
+    transform: translateY(0%);
+}
+.exit {
+    transform: translateY(0%);
+}
+.exitActive {
+    transform: translateY(120%);
+    transition: transform 750ms cubic-bezier(0.5, 0, 0.75, 0);
+}
+.exitDone {
+    transform: translateY(120%);
+}

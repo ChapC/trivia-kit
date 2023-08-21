@@ -1,0 +1,88 @@
+.root {
+    height: 100vh;
+    width: 100vw;
+    background: linear-gradient(50deg, var(--colour-dark) 25%, var(--colour-light) 100%);
+}
+
+.qContainer {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.qCard {
+    background-color: rgb(245, 245, 245);
+    background: radial-gradient(circle at 50% 50%, white 0%, rgb(217, 217, 217) 100%);
+    border-radius: 20px;
+    border: 10px solid white;
+    overflow: hidden;
+    height: 80%;
+    width: 80%;
+}
+
+.pContainer { 
+    position: absolute;
+    height: 100%;
+    width: 18vw;
+}
+
+.qBuzzerGap {
+    width: 18vw;
+    transition: width 750ms ease;
+}
+
+.bg {
+    position: absolute;
+    overflow: hidden;
+    z-index: 0;
+    height: 100%;
+    width: 100%;
+    pointer-events: none;
+    opacity: 0.06;
+}
+
+.zigZag {
+    background-color: rgba(255, 255, 255, 0);
+    background-image:  linear-gradient(135deg, #ffffff 25%, transparent 25%), linear-gradient(225deg, #ffffff 25%, transparent 25%), linear-gradient(45deg, #ffffff 25%, transparent 25%), linear-gradient(315deg, #ffffff 25%, rgba(255, 255, 255, 0) 25%);
+    background-position:  40px 0, 40px 0, 0 0, 0 0;
+    background-size: 80px 80px;
+    background-repeat: repeat;
+
+    animation: zigzag-scroll 6s linear infinite;
+}
+
+.polka {
+    background-image: radial-gradient(rgb(255, 255, 255) 23.2%, transparent 23.2%);
+    background-position: 0px 0px, 16px 16px;
+    background-size: 32px 32px;
+
+    /* animation: polka-scroll 3s linear infinite; */
+}
+
+@keyframes polka-scroll {
+    0% {
+        background-position: 0px 0px, 16px 16px;
+    }
+    100% {
+        background-position: 32px 32px, 48px 48px;
+    }
+}
+
+@keyframes zigzag-scroll {
+    0% {
+        background-position:  40px 0, 40px 0, 0 0, 0 0;
+    }
+    100% {
+        background-position:  120px 0, 120px 0, 80px 0, 80px 0;
+    }
+}
+
+.bgEmoji {
+    margin: 0;
+    font-size: 5vh;
+    font-family: 'Segoe UI Emoji';
+}
