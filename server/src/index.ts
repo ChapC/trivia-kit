@@ -27,24 +27,30 @@ if (process.env.MEDIA_HOME === undefined) {
   process.exit(1);
 }
 export const MEDIA_HOME = path.resolve(path.join(envPath, process.env.MEDIA_HOME));
-console.info('Reading media from', MEDIA_HOME);
+console.info('Media root directory is at', MEDIA_HOME);
 
 let game = new Game();
 
 const port = process.env.PORT || (production ? 80 : 8334);
 let ips = getIPs();
-let useInterface = process.env.MEDIA_NET_INTERFACE;
+let useInterface = process.env.NET_INTERFACE;
 let localIP = 'localhost';
 if (useInterface) {
   if (ips[useInterface] && ips[useInterface].length > 0) {
     localIP = ips[useInterface][0];
   } else {
-    console.warn(`Couldn't find network interface '${useInterface}' specified in .env`);
+    console.warn(`Couldn't find network interface '${useInterface}' specified in NET_INTERFACE`);
   }
 } else {
-  let ifaces = Object.keys(ips);
-  if (ifaces[0] && ifaces[0][0]) {
-    localIP = ips[ifaces[0]][0];
+  if (ips['Ethernet'] && ips['Ethernet'][0]) {
+    localIP = ips['Ethernet'][0];
+  } else if (ips['Wi-Fi'] && ips['Wi-Fi'][0]) {
+    localIP = ips['Wi-Fi'][0];
+  } else {
+    let ifaces = Object.keys(ips);
+    if (ifaces[0] && ifaces[0][0]) {
+      localIP = ips[ifaces[0]][0];
+    }
   }
 }
 const mediaBaseUrl = `http://${localIP}:${port}/media/`;
