@@ -1,0 +1,68 @@
+.root {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.grid {
+    --square-size: 20vw;
+    height: 100%;
+    width: 100%;
+    align-content: center;
+    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat( auto-fill, var(--square-size) );
+    gap: 30px;
+    overflow: auto;
+}
+
+.footer {
+    height: 10vh;
+    border-top: 3px solid white;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.square {
+    height: var(--square-size);
+    width: var(--square-size);
+    background-color: rgb(103, 103, 103);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.op {
+    width: 100%;
+    grid-column: span 2;
+    font-size: 12vh;
+    font-weight: bolder;
+}
+
+.score {
+    font-size: 13vh;
+}
+
+.set {
+    width: 100%;
+    grid-column: span 2;
+    display: flex;
+    flex-direction: row;
+    padding: 15px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.set > button {
+    height: 50%;
+    width: 8vw;
+}
+
+.set > input {
+    width: 100%;
+    flex: 1;
+    font-size: 5vh;
+}

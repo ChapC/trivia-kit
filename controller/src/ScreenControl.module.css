@@ -1,0 +1,140 @@
+.root {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.aList {
+    --square-size: 12vw;
+    flex: 1;
+    width: 100%;
+    justify-content: space-evenly;
+    display: grid;
+    grid-template-columns: repeat( auto-fill, var(--square-size) );
+    grid-template-rows: repeat( auto-fill, var(--square-size));
+    gap: 20px;
+    overflow: auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.rectangle {
+    height: var(--square-size);
+    grid-column: 1 / -1;
+}
+
+.square {
+    height: var(--square-size);
+    width: var(--square-size);
+}
+
+.smallIcon {
+    height: 60%;
+}
+
+.touch {
+    outline: 2px solid rgb(164, 164, 164);
+    color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    font-size: calc(var(--square-size) * 0.2);
+}
+
+.touchEffect:active {
+    background-color: white;
+    color: black;
+}
+
+.touch p {
+    text-align: center;
+    margin: 0;
+}
+
+.revealOpen {
+    height: 100%;
+    flex: 1;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.revealClosed {
+    height: 100%;
+    width: 25%;
+    background-color: hsl(0, 66%, 53%);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fillCenter {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.media {
+    flex-direction: column;
+}
+
+.mediaName {
+    flex: 1;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.mediaButtons {
+    width: 100%;
+    height: 50%;
+    display: flex;
+    flex-direction: row;
+}
+
+.mediaBtn {
+    height: 100%;
+    flex: 1;
+    background-color: rgba(255, 255, 255, 0.153);
+}
+
+.divider {
+    height: 100%;
+    width: 3px;
+    background-color: rgb(164, 164, 164);
+}
+
+.buzzers {
+    width: 100%;
+    height: 10vh;
+    min-height: 33px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    font-size: 3vh;
+    border-top: 2px solid white;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.buzzers > p {
+    margin: 0;
+}
+
+.buzzers > button {
+    height: 100%;
+    width: 100px;
+}
