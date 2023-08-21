@@ -1,0 +1,17 @@
+{
+  "name": "triviakit-common",
+  "private": "true",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "build": "npm run clean && tsc",
+    "clean": "npx rimraf dist",
+    "watch": "npx tsc --watch"
+  },
+  "author": "Chap Callanan",
+  "license": "ISC"
+}
