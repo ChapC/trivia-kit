@@ -97,7 +97,7 @@ if (existsSync(webPath)) {
     let index = readFileSync(indexFile, { encoding: 'utf-8' });
     let indexWithBasePath = index.replace('main.js', `${hostAt}/main.js`);
     app.get(`/${hostAt}`, (req, res) => res.send(indexWithBasePath));
-    app.use(`/${hostAt}`, express.static(`web/${webFolder}`));
+    app.use(`/${hostAt}`, express.static(path.join(webPath, webFolder)));
   }
 
   serveApp('screen');
