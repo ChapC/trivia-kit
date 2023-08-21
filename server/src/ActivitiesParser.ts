@@ -1,6 +1,8 @@
 import { existsSync, readdirSync } from "fs";
 import { Activities, MediaType, ActivityType, MediaActivity, Activity,  FourChoiceActivity, MediaListActivity, RevealActivity, MediaFit } from "triviakit-common";
 import YAML from 'yaml';
+import path from 'path';
+import { MEDIA_HOME } from ".";
 
 const ActivityTypeValues = new Set(Object.values(ActivityType));
 const MediaTypeValues = new Set(Object.values(MediaType));
@@ -56,7 +58,7 @@ function validateActivity(id: number | string, obj: any, mediaUrlRoot: string, t
                 let items = [];
                 if (typeof obj.itemsFolder === 'string') {
                     let c = new Intl.Collator([], { numeric: true });
-                    items.push(...readdirSync('media/' + obj.itemsFolder).map(f => obj.itemsFolder + '/' + f).sort((a, b) => c.compare(a, b)));
+                    items.push(...readdirSync(path.join(MEDIA_HOME, obj.itemsFolder)).map(f => obj.itemsFolder + '/' + f).sort((a, b) => c.compare(a, b)));
                 }
                 if (typeof obj.items !== 'object' && !Array.isArray(obj.items)) {
                     if (items.length === 0) throw Error(`[${id}] MediaList activities must have an array property 'items'`);
@@ -125,7 +127,7 @@ function validateMediaActivity(id: number | string, file: string, obj: any, medi
         throw Error(`[${id}] Unsupported media extension ${ext}`);
     }
 
-    if (!existsSync('media/' + file)) {
+    if (!existsSync(path.join(MEDIA_HOME, file))) {
         console.warn(`[${id}] WARN Media not found (${file})`);
     }
 

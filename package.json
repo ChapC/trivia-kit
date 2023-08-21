@@ -10,9 +10,14 @@
     "./screen",
     "./controller"
   ],
-  "scripts": {},
+  "scripts": {
+    "build": "npm run build -w common && npm run build -w server && npm run build -w buzzer && npm run build -w screen && npm run build -w controller && npm run copy-webapps",
+    "copy-webapps": "npx copyfiles -u 2 buzzer/dist/**/* server/dist/web/buzzer && npx copyfiles -u 2 controller/dist/**/* server/dist/web/controller && npx copyfiles -u 2 screen/dist/**/* server/dist/web/screen",
+    "start": "npm run start -w server"
+  },
   "devDependencies": {
     "concurrently": "^8.2.0",
+    "copyfiles": "^2.4.1",
     "nodemon": "^3.0.1",
     "rimraf": "^5.0.1",
     "typescript": "^5.1.6"

@@ -12,10 +12,26 @@ import parseActivities from './ActivitiesParser';
 import validateEffect from './EffectValidator';
 import path from 'path';
 
-dotenv.config();
+console.info('-- ❔ TriviaKit server 🧠 --');
+const production = process.env.NODE_ENV === 'production';
+let envPath = '';
+if (existsSync(path.join(process.cwd(), '.env'))) {
+  dotenv.config();
+} else {
+  envPath = '../';
+  dotenv.config({ path: path.resolve(process.cwd(), '../.env') });
+}
+
+if (process.env.MEDIA_HOME === undefined) {
+  console.error('Missing MEDIA_HOME environment variable. Set this in an .env file in the root directory, pointing to the folder where the game media is located.');
+  process.exit(1);
+}
+export const MEDIA_HOME = path.resolve(path.join(envPath, process.env.MEDIA_HOME));
+console.info('Reading media from', MEDIA_HOME);
+
 let game = new Game();
 
-const port = process.env.PORT || 80;
+const port = process.env.PORT || (production ? 80 : 8334);
 let ips = getIPs();
 let useInterface = process.env.MEDIA_NET_INTERFACE;
 let localIP = 'localhost';
@@ -31,10 +47,10 @@ if (useInterface) {
     localIP = ips[ifaces[0]][0];
   }
 }
-const mediaBase = `http://${localIP}:${port}/media/`;
+const mediaBaseUrl = `http://${localIP}:${port}/media/`;
 
 console.info(`Reading game-settings.yaml...`);
-let settingsFile = readFileSync('./game-settings.yaml').toString();
+let settingsFile = readFileSync(path.join(MEDIA_HOME, 'game-settings.yaml')).toString();
 let gameSettings: GameSettings;
 try {
   let settingsObj = YAML.parse(settingsFile);
@@ -49,12 +65,12 @@ try {
   process.exit(1);
 }
 
-gameSettings.game.players.map(p => game.addPlayer(p.name, mediaBase + p.img));
+gameSettings.game.players.map(p => game.addPlayer(p.name, mediaBaseUrl + p.img));
 
 console.info(`Loading activities from ${gameSettings.game.activities}.yaml...`);
-let activitiesFile = readFileSync(`${gameSettings.game.activities}.yaml`).toString();
+let activitiesFile = readFileSync(path.join(MEDIA_HOME, `${gameSettings.game.activities}.yaml`)).toString();
 try {
-  game.activities = parseActivities(activitiesFile, mediaBase);
+  game.activities = parseActivities(activitiesFile, mediaBaseUrl);
   console.info(`Loaded ${Object.keys(game.activities).length} activities`);
 } catch (err) {
   console.error('Error while loading activities', err);
@@ -66,18 +82,19 @@ const wss = new WebSocketServer({ noServer: true });
 const app: Express = express();
 
 app.use(cors());
-app.use('/media', express.static('media'));
-if (existsSync('web')) {
+app.use('/media', express.static(MEDIA_HOME));
+const webPath = path.join(__dirname, 'web');
+if (existsSync(webPath)) {
   function serveApp(webFolder: string, url?: string) {
     let hostAt = url || webFolder;
-    let indexFile = path.join(process.cwd(), 'web', `${webFolder}/index.html`);
+    let indexFile = path.join(webPath, `${webFolder}/index.html`);
     let index = readFileSync(indexFile, { encoding: 'utf-8' });
     let indexWithBasePath = index.replace('main.js', `${hostAt}/main.js`);
     app.get(`/${hostAt}`, (req, res) => res.send(indexWithBasePath));
     app.use(`/${hostAt}`, express.static(`web/${webFolder}`));
   }
 
-  serveApp('board', 'screen');
+  serveApp('screen');
   serveApp('buzzer');
   serveApp('controller', 'host-controller');
 }
