@@ -71,7 +71,7 @@ export default class GameConnection extends Listenable<GameEventData> {
     private heartbeatTimeout: number | undefined;
     private heartbeat() {
         clearTimeout(this.heartbeatTimeout);
-        this.heartbeatTimeout = setTimeout(() => {
+        this.heartbeatTimeout = window.setTimeout(() => {
             console.error('[GameConnection] Missed heartbeat, closing socket');
             this.onDisconnect();
         }, HEARTBEAT_TIMEOUT);
