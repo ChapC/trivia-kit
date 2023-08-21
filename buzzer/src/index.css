@@ -1,0 +1,14 @@
+:root {
+    --colour-dark: #038373;
+    --colour-light: #00CC8E;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    touch-action: pan-y;
+}
+
+img {
+    user-select: none;
+}
