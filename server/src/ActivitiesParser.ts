@@ -113,7 +113,7 @@ function activityIsMedia(a: Activity): a is MediaActivity {
 function validateMediaActivity(id: number | string, file: string, obj: any, mediaUrlRoot: string): MediaActivity {
     let split = file.split('.');
     if (split.length === 0) throw Error(`[${id}] Invalid file path - no extension`);
-    let ext = split[split.length - 1].trim();
+    let ext = split[split.length - 1].trim().toLowerCase();
     let mediaType: MediaType;
     if (['png', 'jpg', 'jpeg', 'svg', 'webp', 'avif'].includes(ext)) {
         mediaType = MediaType.Image;
