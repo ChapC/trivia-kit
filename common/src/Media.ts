@@ -30,7 +30,11 @@ export interface MediaActivity extends ActivityBase {
     type: MediaType,
     file: string,
     fit?: MediaFit,
-    autoPlay?: boolean
+    autoPlay?: boolean,
+    /**
+     * (Optional) Automatically pause playback at one or more times, specified in seconds.
+     */
+    pauseAt?: number | number[]
 }
 
 export enum ActivityType {

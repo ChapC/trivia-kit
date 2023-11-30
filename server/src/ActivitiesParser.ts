@@ -141,9 +141,25 @@ function validateMediaActivity(id: number | string, file: string, obj: any, medi
         autoPlay = obj.autoPlay;
     }
 
+    let pauseAt = undefined;
+    if (typeof obj.pauseAt === 'number') {
+        pauseAt = obj.pauseAt;
+    } else if (typeof obj.pauseAt === 'object' && typeof obj.pauseAt.length === 'number') {
+        if (obj.pauseAt.length > 0) {
+            let pauseAtList = obj.pauseAt as any[];
+            if (pauseAtList.every(o => typeof o === 'number')) {
+                pauseAt = obj.pauseAt;
+            } else {
+                throw Error(`[${id}] Unsupported type encountered in pauseAt list. All list elements must be numbers.`);
+            }
+        }
+    } else if (typeof obj.pauseAt !== 'undefined') {
+        throw Error(`[${id}] Unsupported type '${typeof obj.pauseAt}' for pauseAt property. Must be number or list of numbers.`);
+    }
+
     return {
         id, file: mediaUrlRoot + file,
         type: mediaType,
-        fit, autoPlay
+        fit, autoPlay, pauseAt
     }
 }

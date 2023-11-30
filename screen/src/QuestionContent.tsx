@@ -133,6 +133,7 @@ function MediaActivityContent(props: ActivityRendererProps) {
         if (effect.targetActivityId === m.id || effect.parentActivityId === m.id) {
             if (effect.action === PlaybackEffectAction.Restart) {
                 setPlayKey(playKey + 1);
+                setPauseAtTimes();
                 setEffectStatus(PlaybackEffectAction.Play);
             } else {
                 if (effect.action === PlaybackEffectAction.Play && !mediaPlaying) {
@@ -147,13 +148,40 @@ function MediaActivityContent(props: ActivityRendererProps) {
         setEffectStatus(PlaybackEffectAction.Pause);
     });
 
-    const playing = vis === Visibility.OnScreen && (
+    const shouldPlay = vis === Visibility.OnScreen && (
         (effectStatus === undefined && autoPlay) ||
         (effectStatus !== undefined && effectStatus === PlaybackEffectAction.Play)
     );
 
     let content = null;
     let pauseable = false;
+
+    const pauseAtRef = useRef<number[]>([]);
+    let pauseAtListener: PlayableContentProps["onTimeUpdate"] = undefined;
+    function setPauseAtTimes() {
+        pauseAtRef.current = [];
+        if (typeof m.pauseAt === 'number') {
+            pauseAtRef.current.push(m.pauseAt);
+        } else if (typeof m.pauseAt === 'object') {
+            pauseAtRef.current = [...m.pauseAt];
+        }
+    }
+
+    useEffect(function onNewActivity() {
+        setPauseAtTimes();
+    }, [ props.m.id ]);
+
+    if (pauseAtRef.current.length > 0) {
+        pauseAtListener = (currentTime: number) => {
+            for (let i = 0; i < pauseAtRef.current.length; i++) {
+                let t = pauseAtRef.current[i];
+                if (currentTime > t) {
+                    pauseAtRef.current.splice(i, 1);
+                    setEffectStatus(PlaybackEffectAction.Pause);
+                }
+            }
+        }
+    }
 
     switch (m.type) {
         case MediaType.Text:
@@ -162,7 +190,8 @@ function MediaActivityContent(props: ActivityRendererProps) {
         case MediaType.Video:
             content = <VideoContent url={m.file} objectFit={fit}
                 onStart={() => setMediaPlaying(true)} onEnd={() => setMediaPlaying(false)}
-                playing={playing} playKey={playKey} key={m.id} />
+                onTimeUpdate={pauseAtListener}
+                playing={shouldPlay} playKey={playKey} key={m.id} />
             pauseable = true;
             break;
         case MediaType.Image:
@@ -171,7 +200,8 @@ function MediaActivityContent(props: ActivityRendererProps) {
         case MediaType.Audio:
             content = <AudioContent url={m.file} objectFit={fit}
                 onStart={() => setMediaPlaying(true)} onEnd={() => setMediaPlaying(false)}
-                playing={playing} playKey={playKey} />
+                onTimeUpdate={pauseAtListener}
+                playing={shouldPlay} playKey={playKey} />
             pauseable = true;
             break;
     }
@@ -191,11 +221,12 @@ function MediaActivityContent(props: ActivityRendererProps) {
 }
 
 type PlayableContentProps = {
-    url: string, playing: boolean, objectFit: string, playKey: number,
-    onStart: () => void, onEnd: () => void
+    url: string, playing: boolean, playKey: number,
+    objectFit: string,
+    onStart: () => void, onEnd: () => void, onTimeUpdate?: (currentTime: number) => void
 };
 function usePlayback(playerRef: React.RefObject<HTMLMediaElement>, props: PlayableContentProps) {
-    const { playing, playKey, onStart, onEnd, url } = props;
+    const { playing, playKey, onStart, onEnd, onTimeUpdate, url } = props;
 
     const [mediaPlaying, setMediaPlaying] = useState<boolean>(false);
     useEffect(function listen() {
@@ -207,15 +238,23 @@ function usePlayback(playerRef: React.RefObject<HTMLMediaElement>, props: Playab
             setMediaPlaying(false);
             onEnd();
         }
+        function onTime() {
+            if (!onTimeUpdate || !playerRef.current) return;
+            onTimeUpdate(playerRef.current.currentTime);
+        }
 
         if (playerRef.current) {
             playerRef.current.addEventListener('playing', onPlaying);
             playerRef.current.addEventListener('ended', onEnded);
+            if (onTimeUpdate) {
+                playerRef.current.addEventListener('timeupdate', onTime);
+            }
         }
 
         return () => {
             playerRef.current?.removeEventListener('playing', onPlaying);
             playerRef.current?.removeEventListener('ended', onEnded);
+            playerRef.current?.removeEventListener('timeupdate', onTime);
         }
     }, [playerRef.current]);
 
