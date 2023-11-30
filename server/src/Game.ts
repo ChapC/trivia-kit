@@ -79,7 +79,6 @@ export default class Game extends Listenable<GameEventData> {
             return;
         }
 
-        console.info(`BuzzIn ${this.players.get(playerId)?.name}`);
         this.buzzes.push({
             playerId,
             time: Date.now()
