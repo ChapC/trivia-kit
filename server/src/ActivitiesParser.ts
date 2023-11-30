@@ -70,8 +70,10 @@ function validateActivity(id: number | string, obj: any, mediaUrlRoot: string, t
                     let file = items[i];
                     if (typeof file === 'string') {
                         medias.push(validateMediaActivity(`${id}-${i}`, file, obj, mediaUrlRoot));
+                    } else if (typeof file === 'object' && typeof file.file === 'string') {
+                        medias.push(validateMediaActivity(`${id}-${i}`, file.file, Object.assign({}, obj, file), mediaUrlRoot));
                     } else {
-                        throw Error(`[${id}] All items in MediaList activities must be file paths`);
+                        throw Error(`[${id}] All items in MediaList activities must be file paths or MediaActivity objects`);
                     }
                 }
                 let list: MediaListActivity = {
