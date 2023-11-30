@@ -115,7 +115,7 @@ function validateMediaActivity(id: number | string, file: string, obj: any, medi
     if (split.length === 0) throw Error(`[${id}] Invalid file path - no extension`);
     let ext = split[split.length - 1].trim();
     let mediaType: MediaType;
-    if (['png', 'jpg', 'jpeg', 'svg', 'webp'].includes(ext)) {
+    if (['png', 'jpg', 'jpeg', 'svg', 'webp', 'avif'].includes(ext)) {
         mediaType = MediaType.Image;
     } else if (['mp4', 'mov'].includes(ext)) {
         mediaType = MediaType.Video;
